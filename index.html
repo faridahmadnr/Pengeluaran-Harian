@@ -1,307 +1,407 @@
+
 <!DOCTYPE html>
 <html lang="id">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pengeluaran Harian</title>
-  <style>
-    :root {
-      --primary-color: #4a6fa5;
-      --secondary-color: #166088;
-      --accent-color: #4fc3f7;
-      --light-color: #f8f9fa;
-      --dark-color: #343a40;
-      --success-color: #28a745;
-      --danger-color: #dc3545;
-    }
-    
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-    
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f5f7fa;
-      color: var(--dark-color);
-      line-height: 1.6;
-      padding: 20px;
-    }
-    
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 30px;
-      align-items: start;
-    }
-    
-    .card {
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      padding: 25px;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    
-    .card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-    }
-    
-    .card-header {
-      color: var(--primary-color);
-      margin-bottom: 20px;
-      padding-bottom: 10px;
-      border-bottom: 2px solid var(--accent-color);
-    }
-    
-    .form-group {
-      margin-bottom: 20px;
-    }
-    
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 600;
-      color: var(--secondary-color);
-    }
-    
-    input {
-      width: 100%;
-      padding: 12px 15px;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      font-size: 16px;
-      transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    }
-    
-    input:focus {
-      outline: none;
-      border-color: var(--accent-color);
-      box-shadow: 0 0 0 3px rgba(79, 195, 247, 0.2);
-    }
-    
-    button {
-      width: 100%;
-      padding: 12px;
-      background-color: var(--primary-color);
-      color: white;
-      border: none;
-      border-radius: 6px;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background-color 0.3s ease, transform 0.2s ease;
-    }
-    
-    button:hover {
-      background-color: var(--secondary-color);
-    }
-    
-    button:active {
-      transform: scale(0.98);
-    }
-    
-    .stats-card {
-      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    }
-    
-    .stat-value {
-      font-size: 24px;
-      font-weight: 700;
-      color: var(--secondary-color);
-      margin-bottom: 30px;
-    }
-    
-    .stat-title {
-      color: var(--primary-color);
-      margin-bottom: 5px;
-    }
-    
-    @media (max-width: 768px) {
-      .container {
-        grid-template-columns: 1fr;
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pengeluaran Harian</title>
+    <style>
+      :root {
+        --primary-color: #4361ee;
+        --primary-light: #e9efff;
+        --secondary-color: #3f37c9;
+        --success-color: #4cc9f0;
+        --text-color: #333;
+        --bg-color: #f8f9fa;
+        --card-bg: #ffffff;
+        --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        --transition: all 0.3s ease;
+        --border-radius: 12px;
       }
-      
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', 'Roboto', sans-serif;
+      }
+
       body {
-        padding: 15px;
-      }
-      
-      .card {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        min-height: 100vh;
         padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
       }
-    }
-    
-    /* Animation */
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    
-    .card {
-      animation: fadeIn 0.5s ease forwards;
-    }
-    
-    .card:nth-child(2) {
-      animation-delay: 0.2s;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <div class="card">
-      <h2 class="card-header">Catat Pengeluaran</h2>
-      <div class="form-group">
-        <label for="tanggal">Tanggal</label>
-        <input type="date" id="tanggal" required />
+
+      .container {
+        max-width: 1200px;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .app-header {
+        text-align: center;
+        margin-bottom: 20px;
+        padding: 20px 0;
+      }
+
+      .app-title {
+        font-size: 2rem;
+        color: var(--primary-color);
+        margin-bottom: 8px;
+      }
+
+      .cards-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        width: 100%;
+        justify-content: center;
+      }
+
+      .card {
+        background: var(--card-bg);
+        border-radius: var(--border-radius);
+        box-shadow: var(--card-shadow);
+        padding: 25px;
+        flex: 1;
+        min-width: 300px;
+        max-width: 500px;
+        transition: var(--transition);
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+      }
+
+      .card-header {
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 2px solid var(--primary-light);
+        display: flex;
+        align-items: center;
+      }
+
+      .card-icon {
+        background-color: var(--primary-light);
+        color: var(--primary-color);
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 12px;
+      }
+
+      .card-title {
+        font-size: 1.5rem;
+        color: var(--primary-color);
+      }
+
+      label {
+        display: block;
+        font-weight: 500;
+        margin-bottom: 6px;
+        color: #555;
+      }
+
+      .input-group {
+        margin-bottom: 18px;
+      }
+
+      input {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: var(--transition);
+      }
+
+      input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px var(--primary-light);
+      }
+
+      button {
+        width: 100%;
+        padding: 14px;
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
+
+      button:hover {
+        background-color: var(--secondary-color);
+      }
+
+      .summary-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+        padding: 15px;
+        background-color: var(--primary-light);
+        border-radius: 8px;
+      }
+
+      .summary-label {
+        font-weight: 500;
+      }
+
+      .summary-value {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--primary-color);
+      }
+
+      .animation {
+        animation: fadeIn 0.5s ease;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .notification {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        padding: 15px 25px;
+        background-color: var(--success-color);
+        color: white;
+        border-radius: 8px;
+        box-shadow: var(--card-shadow);
+        transform: translateY(100px);
+        opacity: 0;
+        transition: all 0.5s ease;
+      }
+
+      .notification.show {
+        transform: translateY(0);
+        opacity: 1;
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 768px) {
+        .cards-container {
+          flex-direction: column;
+          align-items: center;
+        }
+        
+        .card {
+          width: 100%;
+          max-width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header class="app-header">
+        <h1 class="app-title">Manajemen Pengeluaran</h1>
+        <p>Catat dan pantau pengeluaran Anda dengan mudah</p>
+      </header>
+
+      <div class="cards-container">
+        <div class="card animation">
+          <div class="card-header">
+            <div class="card-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+              </svg>
+            </div>
+            <h2 class="card-title">Tambah Transaksi</h2>
+          </div>
+
+          <div class="input-group">
+            <label for="tanggal">Tanggal</label>
+            <input type="date" id="tanggal" required />
+          </div>
+
+          <div class="input-group">
+            <label for="waktu">Waktu</label>
+            <input type="time" id="waktu" required />
+          </div>
+
+          <div class="input-group">
+            <label for="barang">Keterangan</label>
+            <input type="text" id="barang" placeholder="Contoh: Makan Siang" required />
+          </div>
+
+          <div class="input-group">
+            <label for="harga">Harga (Rp)</label>
+            <input type="number" id="harga" placeholder="Contoh: 25000" required />
+          </div>
+
+          <button onclick="simpan()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
+            </svg>
+            Simpan Transaksi
+          </button>
+        </div>
+
+        <div class="card animation">
+          <div class="card-header">
+            <div class="card-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M7 6.5C7 7.328 6.552 8 6 8s-1-.672-1-1.5S5.448 5 6 5s1 .672 1 1.5M4.285 9.567a.5.5 0 0 1 .683.183A3.498 3.498 0 0 0 8 11.5a3.498 3.498 0 0 0 3.032-1.75.5.5 0 1 1 .866.5A4.498 4.498 0 0 1 8 12.5a4.498 4.498 0 0 1-3.898-2.25.5.5 0 0 1 .183-.683M10 8c-.552 0-1-.672-1-1.5S9.448 5 10 5s1 .672 1 1.5S10.552 8 10 8"/>
+              </svg>
+            </div>
+            <h2 class="card-title">Ringkasan Pengeluaran</h2>
+          </div>
+
+          <div class="summary-item">
+            <span class="summary-label">Total Hari Ini</span>
+            <span class="summary-value" id="harian">Rp 0</span>
+          </div>
+
+          <div class="summary-item">
+            <span class="summary-label">Total Bulan Ini</span>
+            <span class="summary-value" id="bulanan">Rp 0</span>
+          </div>
+        </div>
       </div>
-      
-      <div class="form-group">
-        <label for="waktu">Waktu</label>
-        <input type="time" id="waktu" required />
-      </div>
-      
-      <div class="form-group">
-        <label for="barang">Keterangan</label>
-        <input type="text" id="barang" placeholder="Apa yang dibeli?" required />
-      </div>
-      
-      <div class="form-group">
-        <label for="harga">Harga</label>
-        <input type="number" id="harga" placeholder="Rp" required />
-      </div>
-      
-      <button onclick="simpan()">Simpan Pengeluaran</button>
     </div>
 
-    <div class="card stats-card">
-      <h2 class="card-header">Ringkasan Pengeluaran</h2>
-      
-      <div class="stat-group">
-        <h3 class="stat-title">Hari Ini</h3>
-        <div class="stat-value" id="harian">Rp 0</div>
-      </div>
-      
-      <div class="stat-group">
-        <h3 class="stat-title">Bulan Ini</h3>
-        <div class="stat-value" id="bulanan">Rp 0</div>
-      </div>
-    </div>
-  </div>
+    <div class="notification" id="notification">Data berhasil disimpan!</div>
 
-  <script>
-    const webAppUrl = "https://script.google.com/macros/s/AKfycbz2k6iMrZACUCxGfZI8jKr3fqE16rgYomxyc44bts_H8K9klncidrTuciCaU3lB_EyV/exec";
+    <script>
+      const webAppUrl =
+        "https://script.google.com/macros/s/AKfycbz2k6iMrZACUCxGfZI8jKr3fqE16rgYomxyc44bts_H8K9klncidrTuciCaU3lB_EyV/exec";
 
-    // Set default date and time to current
-    document.addEventListener('DOMContentLoaded', function() {
-      const now = new Date();
-      const today = now.toISOString().substr(0, 10);
-      const time = now.toTimeString().substr(0, 5);
-      
-      document.getElementById('tanggal').value = today;
-      document.getElementById('waktu').value = time;
-      
-      loadRekap();
-    });
+      // Set tanggal dan waktu default ke saat ini
+      window.addEventListener('DOMContentLoaded', () => {
+        const now = new Date();
+        const today = now.toISOString().split('T')[0];
+        const currentTime = now.toTimeString().substring(0, 5);
+        
+        document.getElementById('tanggal').value = today;
+        document.getElementById('waktu').value = currentTime;
+      });
 
-    function simpan() {
-      const tanggal = document.getElementById("tanggal").value;
-      const waktu = document.getElementById("waktu").value;
-      const barang = document.getElementById("barang").value.trim();
-      const harga = document.getElementById("harga").value;
-      
-      // Validation
-      if (!tanggal || !waktu || !barang || !harga) {
-        alert("Harap lengkapi semua field!");
-        return;
-      }
-      
-      if (parseFloat(harga) <= 0) {
-        alert("Harga harus lebih dari 0");
-        return;
+      function showNotification(message) {
+        const notification = document.getElementById("notification");
+        notification.textContent = message;
+        notification.classList.add("show");
+        
+        setTimeout(() => {
+          notification.classList.remove("show");
+        }, 3000);
       }
 
-      const data = {
-        tanggal: tanggal,
-        waktu: waktu,
-        barang: barang,
-        harga: harga,
-      };
+      function simpan() {
+        const tanggal = document.getElementById("tanggal").value;
+        const waktu = document.getElementById("waktu").value;
+        const barang = document.getElementById("barang").value;
+        const harga = document.getElementById("harga").value;
+        
+        // Validasi input
+        if (!tanggal || !waktu || !barang || !harga) {
+          showNotification("Semua field harus diisi!");
+          return;
+        }
+        
+        const data = { tanggal, waktu, barang, harga };
 
-      // Show loading state
-      const button = document.querySelector('button');
-      button.disabled = true;
-      button.textContent = 'Menyimpan...';
-      
-      fetch(webAppUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams(data),
-      })
-        .then((res) => res.text())
-        .then(() => {
-          // Show success message with animation
-          button.textContent = '✓ Tersimpan!';
-          button.style.backgroundColor = var('--success-color');
-          
-          // Reset form
-          document.getElementById("barang").value = "";
-          document.getElementById("harga").value = "";
-          
-          // Reset button after delay
-          setTimeout(() => {
-            button.textContent = 'Simpan Pengeluaran';
-            button.style.backgroundColor = '';
+        // Disable button selama proses simpan
+        const button = document.querySelector("button");
+        const originalText = button.innerHTML;
+        button.disabled = true;
+        button.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" class="animate-spin">
+                              <path d="M8 3a5 5 0 1 0 0 10A5 5 0 0 0 8 3zm0 1a4 4 0 1 1 0 8 4 4 0 0 1 0-8z"/>
+                            </svg> Menyimpan...`;
+
+        fetch(webAppUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: new URLSearchParams(data),
+        })
+          .then((res) => res.text())
+          .then(() => {
+            showNotification("Data berhasil disimpan!");
+            
+            // Reset form kecuali tanggal dan waktu
+            document.getElementById("barang").value = "";
+            document.getElementById("harga").value = "";
+            
+            // Kembalikan status button
             button.disabled = false;
-          }, 2000);
-          
-          loadRekap();
-        })
-        .catch(() => {
-          alert("Gagal menyimpan data");
-          button.textContent = 'Simpan Pengeluaran';
-          button.disabled = false;
-        });
-    }
-
-    function loadRekap() {
-      const harianElement = document.getElementById("harian");
-      const bulananElement = document.getElementById("bulanan");
-      
-      // Show loading state
-      harianElement.textContent = "Memuat...";
-      bulananElement.textContent = "Memuat...";
-      
-      fetch(webAppUrl)
-        .then((res) => res.json())
-        .then((data) => {
-          let totalHarian = 0;
-          let totalBulanan = 0;
-
-          const today = new Date().toISOString().split("T")[0];
-          const thisMonth = today.substring(0, 7); // "yyyy-mm"
-
-          data.forEach((entry) => {
-            if (entry.tanggal === today) totalHarian += entry.total;
-            if (entry.tanggal.startsWith(thisMonth))
-              totalBulanan += entry.total;
+            button.innerHTML = originalText;
+            
+            // Reload data ringkasan
+            loadRekap();
+          })
+          .catch((error) => {
+            showNotification("Gagal menyimpan data!");
+            console.error("Error:", error);
+            
+            // Kembalikan status button
+            button.disabled = false;
+            button.innerHTML = originalText;
           });
+      }
 
-          harianElement.textContent = formatCurrency(totalHarian);
-          bulananElement.textContent = formatCurrency(totalBulanan);
-        })
-        .catch(() => {
-          harianElement.textContent = "Gagal memuat";
-          bulananElement.textContent = "Gagal memuat";
-        });
-    }
-    
-    function formatCurrency(amount) {
-      return "Rp " + amount.toLocaleString("id-ID");
-    }
-  </script>
-</body>
+      function loadRekap() {
+        const harianEl = document.getElementById("harian");
+        const bulananEl = document.getElementById("bulanan");
+        
+        // Tampilkan indikator loading
+        harianEl.textContent = "Memuat...";
+        bulananEl.textContent = "Memuat...";
+
+        fetch(webAppUrl)
+          .then((res) => res.json())
+          .then((data) => {
+            let totalHarian = 0;
+            let totalBulanan = 0;
+
+            const today = new Date().toISOString().split("T")[0];
+            const thisMonth = today.substring(0, 7); // "yyyy-mm"
+
+            data.forEach((entry) => {
+              if (entry.tanggal === today) totalHarian += entry.total;
+              if (entry.tanggal.startsWith(thisMonth))
+                totalBulanan += entry.total;
+            });
+
+            harianEl.textContent = "Rp " + totalHarian.toLocaleString("id-ID");
+            bulananEl.textContent = "Rp " + totalBulanan.toLocaleString("id-ID");
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            harianEl.textContent = "Gagal memuat data";
+            bulananEl.textContent = "Gagal memuat data";
+          });
+      }
+
+      // Panggil fungsi loadRekap saat halaman dimuat
+      loadRekap();
+    </script>
+  </body>
 </html>
