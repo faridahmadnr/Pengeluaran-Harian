@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pengeluaran Harian</title>
+  <style>
+    :root {
+      --primary-color: #4a6fa5;
+      --secondary-color: #166088;
+      --accent-color: #4fc3f7;
+      --light-color: #f8f9fa;
+      --dark-color: #343a40;
+      --success-color: #28a745;
+      --danger-color: #dc3545;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f5f7fa;
+      color: var(--dark-color);
+      line-height: 1.6;
+      padding: 20px;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      align-items: start;
+    }
+    
+    .card {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 25px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    .card-header {
+      color: var(--primary-color);
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--accent-color);
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: var(--secondary-color);
+    }
+    
+    input {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 16px;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    input:focus {
+      outline: none;
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 3px rgba(79, 195, 247, 0.2);
+    }
+    
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    
+    button:hover {
+      background-color: var(--secondary-color);
+    }
+    
+    button:active {
+      transform: scale(0.98);
+    }
+    
+    .stats-card {
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    }
+    
+    .stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--secondary-color);
+      margin-bottom: 30px;
+    }
+    
+    .stat-title {
+      color: var(--primary-color);
+      margin-bottom: 5px;
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+      
+      body {
+        padding: 15px;
+      }
+      
+      .card {
+        padding: 20px;
+      }
+    }
+    
+    /* Animation */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .card {
+      animation: fadeIn 0.5s ease forwards;
+    }
+    
+    .card:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <h2 class="card-header">Catat Pengeluaran</h2>
+      <div class="form-group">
+        <label for="tanggal">Tanggal</label>
+        <input type="date" id="tanggal" required />
+      </div>
+      
+      <div class="form-group">
+        <label for="waktu">Waktu</label>
+        <input type="time" id="waktu" required />
+      </div>
+      
+      <div class="form-group">
+        <label for="barang">Keterangan</label>
+        <input type="text" id="barang" placeholder="Apa yang dibeli?" required />
+      </div>
+      
+      <div class="form-group">
+        <label for="harga">Harga</label>
+        <input type="number" id="harga" placeholder="Rp" required />
+      </div>
+      
+      <button onclick="simpan()">Simpan Pengeluaran</button>
+    </div>
+
+    <div class="card stats-card">
+      <h2 class="card-header">Ringkasan Pengeluaran</h2>
+      
+      <div class="stat-group">
+        <h3 class="stat-title">Hari Ini</h3>
+        <div class="stat-value" id="harian">Rp 0</div>
+      </div>
+      
+      <div class="stat-group">
+        <h3 class="stat-title">Bulan Ini</h3>
+        <div class="stat-value" id="bulanan">Rp 0</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const webAppUrl = "https://script.google.com/macros/s/AKfycbz2k6iMrZACUCxGfZI8jKr3fqE16rgYomxyc44bts_H8K9klncidrTuciCaU3lB_EyV/exec";
+
+    // Set default date and time to current
+    document.addEventListener('DOMContentLoaded', function() {
+      const now = new Date();
+      const today = now.toISOString().substr(0, 10);
+      const time = now.toTimeString().substr(0, 5);
+      
+      document.getElementById('tanggal').value = today;
+      document.getElementById('waktu').value = time;
+      
+      loadRekap();
+    });
+
+    function simpan() {
+      const tanggal = document.getElementById("tanggal").value;
+      const waktu = document.getElementById("waktu").value;
+      const barang = document.getElementById("barang").value.trim();
+      const harga = document.getElementById("harga").value;
+      
+      // Validation
+      if (!tanggal || !waktu || !barang || !harga) {
+        alert("Harap lengkapi semua field!");
+        return;
+      }
+      
+      if (parseFloat(harga) <= 0) {
+        alert("Harga harus lebih dari 0");
+        return;
+      }
+
+      const data = {
+        tanggal: tanggal,
+        waktu: waktu,
+        barang: barang,
+        harga: harga,
+      };
+
+      // Show loading state
+      const button = document.querySelector('button');
+      button.disabled = true;
+      button.textContent = 'Menyimpan...';
+      
+      fetch(webAppUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams(data),
+      })
+        .then((res) => res.text())
+        .then(() => {
+          // Show success message with animation
+          button.textContent = '✓ Tersimpan!';
+          button.style.backgroundColor = var('--success-color');
+          
+          // Reset form
+          document.getElementById("barang").value = "";
+          document.getElementById("harga").value = "";
+          
+          // Reset button after delay
+          setTimeout(() => {
+            button.textContent = 'Simpan Pengeluaran';
+            button.style.backgroundColor = '';
+            button.disabled = false;
+          }, 2000);
+          
+          loadRekap();
+        })
+        .catch(() => {
+          alert("Gagal menyimpan data");
+          button.textContent = 'Simpan Pengeluaran';
+          button.disabled = false;
+        });
+    }
+
+    function loadRekap() {
+      const harianElement = document.getElementById("harian");
+      const bulananElement = document.getElementById("bulanan");
+      
+      // Show loading state
+      harianElement.textContent = "Memuat...";
+      bulananElement.textContent = "Memuat...";
+      
+      fetch(webAppUrl)
+        .then((res) => res.json())
+        .then((data) => {
+          let totalHarian = 0;
+          let totalBulanan = 0;
+
+          const today = new Date().toISOString().split("T")[0];
+          const thisMonth = today.substring(0, 7); // "yyyy-mm"
+
+          data.forEach((entry) => {
+            if (entry.tanggal === today) totalHarian += entry.total;
+            if (entry.tanggal.startsWith(thisMonth))
+              totalBulanan += entry.total;
+          });
+
+          harianElement.textContent = formatCurrency(totalHarian);
+          bulananElement.textContent = formatCurrency(totalBulanan);
+        })
+        .catch(() => {
+          harianElement.textContent = "Gagal memuat";
+          bulananElement.textContent = "Gagal memuat";
+        });
+    }
+    
+    function formatCurrency(amount) {
+      return "Rp " + amount.toLocaleString("id-ID");
+    }
+  </script>
+</body>
+</html>
