@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Diet Tracker</title>
+    <style>
+      :root {
+        --primary-color: #10b981;
+        --primary-light: #d1fae5;
+        --secondary-color: #059669;
+        --success-color: #34d399;
+        --warning-color: #f59e0b;
+        --danger-color: #ef4444;
+        --text-color: #333;
+        --bg-color: #f0fdf4;
+        --card-bg: #ffffff;
+        --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        --transition: all 0.3s ease;
+        --border-radius: 12px;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", "Roboto", sans-serif;
+      }
+
+      body {
+        background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%);
+        color: var(--text-color);
+        min-height: 100vh;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .container {
+        max-width: 1400px;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+      }
+
+      .app-header {
+        text-align: center;
+        margin-bottom: 30px;
+        padding: 30px 0;
+        background: var(--card-bg);
+        border-radius: var(--border-radius);
+        box-shadow: var(--card-shadow);
+      }
+
+      .app-title {
+        font-size: 2.5rem;
+        color: var(--primary-color);
+        margin-bottom: 10px;
+        font-weight: 700;
+      }
+
+      .app-subtitle {
+        font-size: 1.1rem;
+        color: #6b7280;
+        font-weight: 400;
+      }
+
+      .cards-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 25px;
+        width: 100%;
+      }
+
+      .chart-container {
+        grid-column: 1 / -1;
+        margin-top: 20px;
+      }
+
+      .card {
+        background: var(--card-bg);
+        border-radius: var(--border-radius);
+        box-shadow: var(--card-shadow);
+        padding: 30px;
+        transition: var(--transition);
+        border: 1px solid #e5e7eb;
+      }
+
+      .card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+      }
+
+      .card-header {
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid var(--primary-light);
+        display: flex;
+        align-items: center;
+      }
+
+      .card-icon {
+        background: linear-gradient(
+          135deg,
+          var(--primary-color),
+          var(--secondary-color)
+        );
+        color: white;
+        width: 45px;
+        height: 45px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+        box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);
+      }
+
+      .card-title {
+        font-size: 1.6rem;
+        color: var(--primary-color);
+        font-weight: 600;
+      }
+
+      label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #374151;
+        font-size: 0.95rem;
+      }
+
+      .input-group {
+        margin-bottom: 20px;
+      }
+
+      input,
+      textarea {
+        width: 100%;
+        padding: 14px 16px;
+        border: 2px solid #e5e7eb;
+        border-radius: 10px;
+        font-size: 1rem;
+        transition: var(--transition);
+        background-color: #f9fafb;
+      }
+
+      input:focus,
+      textarea:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        background-color: white;
+      }
+
+      textarea {
+        resize: vertical;
+        min-height: 80px;
+      }
+
+      button {
+        width: 100%;
+        padding: 16px;
+        background: linear-gradient(
+          135deg,
+          var(--primary-color),
+          var(--secondary-color)
+        );
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+      }
+
+      button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+      }
+
+      button:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .summary-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 18px;
+        padding: 18px;
+        background: linear-gradient(135deg, var(--primary-light), #ecfdf5);
+        border-radius: 10px;
+        border-left: 4px solid var(--primary-color);
+      }
+
+      .summary-label {
+        font-weight: 600;
+        color: #374151;
+        font-size: 1rem;
+      }
+
+      .summary-value {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: var(--primary-color);
+      }
+
+      .weight-change {
+        font-size: 0.9rem;
+        padding: 4px 8px;
+        border-radius: 6px;
+        margin-left: 8px;
+      }
+
+      .weight-loss {
+        background-color: #dcfce7;
+        color: #16a34a;
+      }
+
+      .weight-gain {
+        background-color: #fef2f2;
+        color: #dc2626;
+      }
+
+      .chart-card {
+        padding: 25px;
+        height: 400px;
+      }
+
+      .chart-container-inner {
+        width: 100%;
+        height: 100%;
+        position: relative;
+      }
+
+      .chart-svg {
+        width: 100%;
+        height: 100%;
+      }
+
+      .bar {
+        transition: var(--transition);
+      }
+
+      .bar:hover {
+        opacity: 0.8;
+      }
+
+      .axis-text {
+        font-size: 12px;
+        fill: #6b7280;
+      }
+
+      .axis-line {
+        stroke: #d1d5db;
+        stroke-width: 1;
+      }
+
+      .grid-line {
+        stroke: #f3f4f6;
+        stroke-width: 1;
+      }
+
+      .animation {
+        animation: fadeIn 0.6s ease;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .notification {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        padding: 18px 25px;
+        background: linear-gradient(
+          135deg,
+          var(--success-color),
+          var(--primary-color)
+        );
+        color: white;
+        border-radius: 10px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        transform: translateY(100px);
+        opacity: 0;
+        transition: all 0.5s ease;
+        font-weight: 600;
+      }
+
+      .notification.show {
+        transform: translateY(0);
+        opacity: 1;
+      }
+
+      .notification.error {
+        background: linear-gradient(135deg, var(--danger-color), #dc2626);
+      }
+
+      @media (max-width: 768px) {
+        .cards-container {
+          grid-template-columns: 1fr;
+        }
+
+        .app-title {
+          font-size: 2rem;
+        }
+
+        .card {
+          padding: 20px;
+        }
+
+        .chart-card {
+          height: 300px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header class="app-header animation">
+        <h1 class="app-title">🏃‍♀️ Diet Tracker</h1>
+        <p class="app-subtitle">
+          Pantau progres diet Anda dengan mudah dan teratur
+        </p>
+      </header>
+
+      <div class="cards-container">
+        <div class="card animation">
+          <div class="card-header">
+            <div class="card-icon">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                fill="currentColor"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"
+                />
+              </svg>
+            </div>
+            <h2 class="card-title">Input Data Diet</h2>
+          </div>
+
+          <div class="input-group">
+            <label for="tanggal">📅 Tanggal</label>
+            <input type="date" id="tanggal" required />
+          </div>
+
+          <div class="input-group">
+            <label for="beratBadan">⚖️ Berat Badan (kg)</label>
+            <input
+              type="number"
+              id="beratBadan"
+              step="0.1"
+              placeholder="Contoh: 70.5"
+              required
+            />
+          </div>
+
+          <div class="input-group">
+            <label for="catatan">📝 Catatan</label>
+            <textarea
+              id="catatan"
+              placeholder="Contoh: Hari ini makan sehat, olahraga 30 menit..."
+            ></textarea>
+          </div>
+
+          <button onclick="simpanData()">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="18"
+              fill="currentColor"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"
+              />
+            </svg>
+            Simpan Data Diet
+          </button>
+        </div>
+
+        <div class="card animation">
+          <div class="card-header">
+            <div class="card-icon">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                fill="currentColor"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M8.5 2.687c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492V2.687zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783"
+                />
+              </svg>
+            </div>
+            <h2 class="card-title">Progress Diet</h2>
+          </div>
+
+          <div class="summary-item">
+            <span class="summary-label">📊 Hari ke:</span>
+            <span class="summary-value" id="hariKe">-</span>
+          </div>
+
+          <div class="summary-item">
+            <span class="summary-label">🏁 Berat Awal:</span>
+            <span class="summary-value" id="beratAwal">- kg</span>
+          </div>
+
+          <div class="summary-item">
+            <span class="summary-label">📏 Berat Saat Ini:</span>
+            <span class="summary-value" id="beratSekarang">- kg</span>
+          </div>
+
+          <div class="summary-item">
+            <span class="summary-label">🎯 Total Perubahan:</span>
+            <span class="summary-value" id="totalPerubahan">- kg</span>
+          </div>
+        </div>
+
+        <div class="card chart-card animation chart-container">
+          <div class="card-header">
+            <div class="card-icon">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                fill="currentColor"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M1.5 14s.5-2 2.5-2 2.5 2 2.5 2h8s-.5-2-2.5-2-2.5 2-2.5 2H1.5zm7-11.5c0-.28.22-.5.5-.5s.5.22.5.5v4c0 .28-.22.5-.5.5s-.5-.22-.5-.5v-4zm-3 2c0-.28.22-.5.5-.5s.5.22.5.5v2c0 .28-.22.5-.5.5s-.5-.22-.5-.5v-2zm6 0c0-.28.22-.5.5-.5s.5.22.5.5v2c0 .28-.22.5-.5.5s-.5-.22-.5-.5v-2z"
+                />
+              </svg>
+            </div>
+            <h2 class="card-title">Grafik Progress Berat Badan</h2>
+          </div>
+
+          <div class="chart-container-inner">
+            <svg class="chart-svg" id="chart"></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="notification" id="notification">Data berhasil disimpan!</div>
+
+    <script>
+      // URL Google Apps Script (ganti dengan URL Anda)
+      const webAppUrl = "https://script.google.com/macros/s/AKfycbzbTUO3vxwwUFBQKLwVJ01Qu2_7ExEfb3P-lVY9IS4zIlLrst6IAhmWaamcGPd71LO9/exec";
+
+      // Set tanggal default ke hari ini
+      window.addEventListener("DOMContentLoaded", () => {
+        const today = new Date().toISOString().split("T")[0];
+        document.getElementById("tanggal").value = today;
+        loadProgress();
+      });
+
+      function showNotification(message, isError = false) {
+        const notification = document.getElementById("notification");
+        notification.textContent = message;
+        notification.classList.toggle("error", isError);
+        notification.classList.add("show");
+
+        setTimeout(() => {
+          notification.classList.remove("show");
+        }, 4000);
+      }
+
+      function simpanData() {
+        const tanggal = document.getElementById("tanggal").value;
+        const beratBadan = document.getElementById("beratBadan").value;
+        const catatan = document.getElementById("catatan").value;
+
+        // Validasi input
+        if (!tanggal || !beratBadan) {
+          showNotification("Tanggal dan berat badan harus diisi!", true);
+          return;
+        }
+
+        if (beratBadan <= 0 || beratBadan > 500) {
+          showNotification("Berat badan tidak valid!", true);
+          return;
+        }
+
+        const data = { tanggal, beratBadan, catatan };
+
+        // Disable button selama proses simpan
+        const button = document.querySelector("button");
+        const originalText = button.innerHTML;
+        button.disabled = true;
+        button.innerHTML = `
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16" style="animation: spin 1s linear infinite;">
+            <path d="M8 0a8 8 0 0 1 8 8 8 8 0 0 1-8 8 8 8 0 0 1-8-8 8 8 0 0 1 8-8zm0 2a6 6 0 1 0 0 12 6 6 0 0 0 0-12z"/>
+            <path d="M8 2a6 6 0 0 1 6 6h-2a4 4 0 0 0-4-4V2z"/>
+          </svg>
+          Menyimpan...
+        `;
+
+        // Simulasi penyimpanan data (ganti dengan fetch ke Google Apps Script)
+        setTimeout(() => {
+          // Simpan ke localStorage untuk demo
+          let dietData = JSON.parse(localStorage.getItem("dietData") || "[]");
+
+          // Cek apakah sudah ada data untuk tanggal yang sama
+          const existingIndex = dietData.findIndex(
+            (item) => item.tanggal === tanggal
+          );
+          if (existingIndex !== -1) {
+            dietData[existingIndex] = {
+              tanggal,
+              beratBadan: parseFloat(beratBadan),
+              catatan,
+            };
+          } else {
+            dietData.push({
+              tanggal,
+              beratBadan: parseFloat(beratBadan),
+              catatan,
+            });
+          }
+
+          // Urutkan berdasarkan tanggal
+          dietData.sort((a, b) => new Date(a.tanggal) - new Date(b.tanggal));
+
+          localStorage.setItem("dietData", JSON.stringify(dietData));
+
+          showNotification("Data berhasil disimpan! 🎉");
+
+          // Reset form catatan saja
+          document.getElementById("catatan").value = "";
+
+          // Kembalikan status button
+          button.disabled = false;
+          button.innerHTML = originalText;
+
+          // Reload progress
+          loadProgress();
+        }, 1000);
+
+        /* 
+        // Uncomment kode ini ketika menggunakan Google Apps Script
+        fetch(webAppUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: new URLSearchParams(data),
+        })
+          .then((res) => res.text())
+          .then(() => {
+            showNotification("Data berhasil disimpan! 🎉");
+            document.getElementById("catatan").value = "";
+            button.disabled = false;
+            button.innerHTML = originalText;
+            loadProgress();
+          })
+          .catch((error) => {
+            showNotification("Gagal menyimpan data!", true);
+            console.error("Error:", error);
+            button.disabled = false;
+            button.innerHTML = originalText;
+          });
+        */
+      }
+
+      function loadProgress() {
+        // Simulasi loading data (ganti dengan fetch dari Google Apps Script)
+        const dietData = JSON.parse(localStorage.getItem("dietData") || "[]");
+
+        if (dietData.length === 0) {
+          document.getElementById("hariKe").textContent = "0";
+          document.getElementById("beratAwal").textContent = "- kg";
+          document.getElementById("beratSekarang").textContent = "- kg";
+          document.getElementById("totalPerubahan").textContent = "- kg";
+          updateChart([]);
+          return;
+        }
+
+        // Urutkan data berdasarkan tanggal
+        dietData.sort((a, b) => new Date(a.tanggal) - new Date(b.tanggal));
+
+        const beratAwal = dietData[0].beratBadan;
+        const beratTerakhir = dietData[dietData.length - 1].beratBadan;
+        const perubahanBerat = beratTerakhir - beratAwal;
+        const hariKe = dietData.length;
+
+        // Update tampilan
+        document.getElementById("hariKe").textContent = hariKe;
+        document.getElementById("beratAwal").textContent =
+          beratAwal.toFixed(1) + " kg";
+        document.getElementById("beratSekarang").textContent =
+          beratTerakhir.toFixed(1) + " kg";
+
+        const perubahanElement = document.getElementById("totalPerubahan");
+        const perubahanText = Math.abs(perubahanBerat).toFixed(1) + " kg";
+
+        if (perubahanBerat < 0) {
+          perubahanElement.innerHTML = `${perubahanText} <span class="weight-change weight-loss">Turun 📉</span>`;
+        } else if (perubahanBerat > 0) {
+          perubahanElement.innerHTML = `${perubahanText} <span class="weight-change weight-gain">Naik 📈</span>`;
+        } else {
+          perubahanElement.textContent = "0 kg";
+        }
+
+        // Update chart
+        updateChart(dietData);
+
+        /* 
+        // Uncomment kode ini ketika menggunakan Google Apps Script
+        fetch(webAppUrl)
+          .then((res) => res.json())
+          .then((data) => {
+            // Process data dan update UI
+            updateProgress(data);
+            updateChart(data);
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            showNotification("Gagal memuat data!", true);
+          });
+        */
+      }
+
+      function updateChart(data) {
+        const svg = document.getElementById("chart");
+        svg.innerHTML = "";
+
+        if (data.length === 0) {
+          const text = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "text"
+          );
+          text.setAttribute("x", "50%");
+          text.setAttribute("y", "50%");
+          text.setAttribute("text-anchor", "middle");
+          text.setAttribute("fill", "#9ca3af");
+          text.setAttribute("font-size", "16");
+          text.textContent = "Belum ada data untuk ditampilkan";
+          svg.appendChild(text);
+          return;
+        }
+
+        const margin = { top: 20, right: 30, bottom: 60, left: 60 };
+        const svgRect = svg.getBoundingClientRect();
+        const width = svgRect.width - margin.left - margin.right;
+        const height = svgRect.height - margin.top - margin.bottom;
+
+        // Tentukan rentang data
+        const weights = data.map((d) => d.beratBadan);
+        const minWeight = Math.min(...weights) - 1;
+        const maxWeight = Math.max(...weights) + 1;
+
+        // Skala
+        const xScale = (i) => (i * width) / (data.length - 1 || 1);
+        const yScale = (weight) =>
+          height - ((weight - minWeight) / (maxWeight - minWeight)) * height;
+
+        // Grid lines
+        for (let i = 0; i <= 5; i++) {
+          const y = (i * height) / 5;
+          const weight = maxWeight - (i * (maxWeight - minWeight)) / 5;
+
+          const gridLine = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "line"
+          );
+          gridLine.setAttribute("x1", 0);
+          gridLine.setAttribute("y1", y + margin.top);
+          gridLine.setAttribute("x2", width);
+          gridLine.setAttribute("y2", y + margin.top);
+          gridLine.setAttribute("class", "grid-line");
+          svg.appendChild(gridLine);
+
+          const label = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "text"
+          );
+          label.setAttribute("x", margin.left - 10);
+          label.setAttribute("y", y + margin.top + 4);
+          label.setAttribute("text-anchor", "end");
+          label.setAttribute("class", "axis-text");
+          label.textContent = weight.toFixed(1);
+          svg.appendChild(label);
+        }
+
+        // Axes
+        const xAxis = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "line"
+        );
+        xAxis.setAttribute("x1", margin.left);
+        xAxis.setAttribute("y1", height + margin.top);
+        xAxis.setAttribute("x2", width + margin.left);
+        xAxis.setAttribute("y2", height + margin.top);
+        xAxis.setAttribute("class", "axis-line");
+        svg.appendChild(xAxis);
+
+        const yAxis = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "line"
+        );
+        yAxis.setAttribute("x1", margin.left);
+        yAxis.setAttribute("y1", margin.top);
+        yAxis.setAttribute("x2", margin.left);
+        yAxis.setAttribute("y2", height + margin.top);
+        yAxis.setAttribute("class", "axis-line");
+        svg.appendChild(yAxis);
+
+        // Bars
+        const barWidth = (width / data.length) * 0.8;
+        data.forEach((d, i) => {
+          const barHeight =
+            ((d.beratBadan - minWeight) / (maxWeight - minWeight)) * height;
+          const x = margin.left + xScale(i) - barWidth / 2;
+          const y = margin.top + height - barHeight;
+
+          const bar = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "rect"
+          );
+          bar.setAttribute("x", x);
+          bar.setAttribute("y", y);
+          bar.setAttribute("width", barWidth);
+          bar.setAttribute("height", barHeight);
+          bar.setAttribute("fill", "url(#gradient)");
+          bar.setAttribute("class", "bar");
+          bar.setAttribute("rx", "4");
+          svg.appendChild(bar);
+
+          // X-axis labels
+          const label = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "text"
+          );
+          label.setAttribute("x", margin.left + xScale(i));
+          label.setAttribute("y", height + margin.top + 20);
+          label.setAttribute("text-anchor", "middle");
+          label.setAttribute("class", "axis-text");
+          label.textContent = `Hari ${i + 1}`;
+          svg.appendChild(label);
+
+          // Weight labels on bars
+          const weightLabel = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "text"
+          );
+          weightLabel.setAttribute("x", margin.left + xScale(i));
+          weightLabel.setAttribute("y", y - 5);
+          weightLabel.setAttribute("text-anchor", "middle");
+          weightLabel.setAttribute("class", "axis-text");
+          weightLabel.setAttribute("font-weight", "bold");
+          weightLabel.textContent = d.beratBadan.toFixed(1);
+          svg.appendChild(weightLabel);
+        });
+
+        // Gradient definition
+        const defs = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "defs"
+        );
+        const gradient = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "linearGradient"
+        );
+        gradient.setAttribute("id", "gradient");
+        gradient.setAttribute("x1", "0%");
+        gradient.setAttribute("y1", "0%");
+        gradient.setAttribute("x2", "0%");
+        gradient.setAttribute("y2", "100%");
+
+        const stop1 = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "stop"
+        );
+        stop1.setAttribute("offset", "0%");
+        stop1.setAttribute("stop-color", "#10b981");
+        stop1.setAttribute("stop-opacity", "0.8");
+
+        const stop2 = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "stop"
+        );
+        stop2.setAttribute("offset", "100%");
+        stop2.setAttribute("stop-color", "#059669");
+        stop2.setAttribute("stop-opacity", "0.6");
+
+        gradient.appendChild(stop1);
+        gradient.appendChild(stop2);
+        defs.appendChild(gradient);
+        svg.insertBefore(defs, svg.firstChild);
+      }
+
+      // CSS untuk animasi spin
+      const style = document.createElement("style");
+      style.textContent = `
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+      `;
+      document.head.appendChild(style);
+    </script>
+  </body>
+</html>
